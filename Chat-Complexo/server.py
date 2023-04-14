@@ -58,19 +58,9 @@ def join_channel(client_socket):
         return channel_name
     return None
 
-
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # cria um socket TCP/IP
-server_socket.bind(('localhost', 8080)) # associa o socket a um endereço e porta
-server_socket.listen(5) # aguarda conexões
-
-clients = []
-channels = [] 
-users = {"user1": "password1", "user2": "password2"}  # dicionário simples de nomes de usuário e senhas
-
-while True:
-    client_socket, client_address = server_socket.accept()
+def client_auth_handler(client_socket, client_address):
     action = client_socket.recv(1024).decode('utf-8')
-    
+
     if action == "register":
         if register(client_socket):
             client_socket.close()
@@ -84,7 +74,7 @@ while True:
                 channel_name = create_channel(client_socket)
             elif channel_action == "join":
                 channel_name = join_channel(client_socket)
-            
+
             if channel_name:
                 clients.append((client_socket, client_address, client_name, channel_name))
                 thread = threading.Thread(target=handle_client, args=(client_socket, client_address, client_name, channel_name))
@@ -94,3 +84,16 @@ while True:
                 client_socket.close()
         else:
             client_socket.close()
+
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind(('localhost', 8080))
+server_socket.listen(5)
+
+clients = []
+channels = []
+users = {"user1": "password1", "user2": "password2"}
+
+while True:
+    client_socket, client_address = server_socket.accept()
+    auth_thread = threading.Thread(target=client_auth_handler, args=(client_socket, client_address))
+    auth_thread.start()

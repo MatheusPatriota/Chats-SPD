@@ -46,8 +46,10 @@ def receive_messages(client_socket):
 def send_messages(client_socket, client_name):
     while True:
         print("Digite sua Mensagem: ")
-        message = input() # aguarda o usuário digitar uma mensagem
-        client_socket.sendall(f"{client_name}:{message}".encode('utf-8')) # envia a mensagem para o servidor juntamente com o nome do cliente
+        message = input()  # aguarda o usuário digitar uma mensagem
+        client_socket.sendall(
+            f"{client_name}:{message}".encode("utf-8")
+        )  # envia a mensagem para o servidor juntamente com o nome do cliente
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect(('localhost', 8080))
@@ -95,8 +97,8 @@ elif action == "login":
         receive_thread = threading.Thread(target=receive_messages, args=(client_socket,))
         send_thread = threading.Thread(target=send_messages, args=(client_socket, client_name))
 
-        receive_thread.start()
-        send_thread.start()
+        receive_thread.start()  # Inicia a thread para receber mensagens
+        send_thread.start()     # Inicia a thread para enviar mensagens
     else:
         print("Falha na autenticação. Conexão encerrada.")
         client_socket.close()
