@@ -1,0 +1,23 @@
+[STARTING] Servidor está iniciando... 27/04/2023 15:55:35
+[NEW CONNECTION] ('127.0.0.1', 64859) conectado. 27/04/2023 15:55:41
+[ACTIVE CONNECTIONS] 1 - 27/04/2023 15:55:41
+[AUTHENTICATION] Usuário 1 Autenticado. - 27/04/2023 15:55:49
+[OPERATION] User 1 consultou SALDO. 27/04/2023 15:56:03
+[REQUEST] User 1 requested access to critical section. 27/04/2023 15:56:03
+[GRANT] Access granted to user 1. 27/04/2023 15:56:03
+[RELEASE] User 1 released critical section. 27/04/2023 15:56:03
+[NEW CONNECTION] ('127.0.0.1', 64909) conectado. 27/04/2023 15:56:28
+[ACTIVE CONNECTIONS] 2 - 27/04/2023 15:56:28
+[AUTHENTICATION] Usuário 2 Autenticado. - 27/04/2023 15:56:33
+[OPERATION] User 2 consultou SALDO. 27/04/2023 15:56:36
+[REQUEST] User 2 requested access to critical section. 27/04/2023 15:56:36
+[GRANT] Access granted to user 2. 27/04/2023 15:56:36
+[RELEASE] User 2 released critical section. 27/04/2023 15:56:36
+[REQUEST] User 2 requested access to critical section. 27/04/2023 15:56:48
+[GRANT] Access granted to user 2. 27/04/2023 15:56:48
+[OPERATION] User 2 solicitou TRANSFERIR para o User 1. 27/04/2023 15:56:48
+[RELEASE] User 2 released critical section. 27/04/2023 15:56:48
+[OPERATION] User 1 consultou SALDO. 27/04/2023 15:56:53
+[REQUEST] User 1 requested access to critical section. 27/04/2023 15:56:53
+[GRANT] Access granted to user 1. 27/04/2023 15:56:53
+[RELEASE] User 1 released critical section. 27/04/2023 15:56:53
