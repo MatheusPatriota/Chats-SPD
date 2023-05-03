@@ -1,0 +1,22 @@
+[DESCONECTANDO] DESCONECTANDO DO SERVIDOR ....  02/05/2023 22:26:26
+[STARTING] SERVIDOR SENDO INICIADO  02/05/2023 22:26:34
+[REQUEST] Mensagem enviada pelo processo 818 para solicitar acesso região critica.  02/05/2023 22:26:39
+[GRANT] Mensagem enviada pelo coordenador dando acesso região critica. Acesso concedido ao processo:818.  02/05/2023 22:26:39
+[RELEASE] Mensagem enviada pelo processo 818 ao sair da região critica.  02/05/2023 22:26:40
+Formato REQUEST - 3|818|0000
+[REQUEST] Mensagem enviada pelo processo 758 para solicitar acesso região critica.  02/05/2023 22:26:41
+[GRANT] Mensagem enviada pelo coordenador dando acesso região critica. Acesso concedido ao processo:758.  02/05/2023 22:26:41
+[RELEASE] Mensagem enviada pelo processo 758 ao sair da região critica.  02/05/2023 22:26:42
+Formato REQUEST - 3|758|0000
+[REQUEST] Mensagem enviada pelo processo 434 para solicitar acesso região critica.  02/05/2023 22:26:43
+[GRANT] Mensagem enviada pelo coordenador dando acesso região critica. Acesso concedido ao processo:434.  02/05/2023 22:26:43
+[RELEASE] Mensagem enviada pelo processo 434 ao sair da região critica.  02/05/2023 22:26:44
+Formato REQUEST - 3|434|0000
+[REQUEST] Mensagem enviada pelo processo 95 para solicitar acesso região critica.  02/05/2023 22:26:45
+[GRANT] Mensagem enviada pelo coordenador dando acesso região critica. Acesso concedido ao processo:95.  02/05/2023 22:26:45
+[RELEASE] Mensagem enviada pelo processo 95 ao sair da região critica.  02/05/2023 22:26:46
+Formato REQUEST - 3|95|00000
+[REQUEST] Mensagem enviada pelo processo 762 para solicitar acesso região critica.  02/05/2023 22:26:47
+[GRANT] Mensagem enviada pelo coordenador dando acesso região critica. Acesso concedido ao processo:762.  02/05/2023 22:26:47
+[RELEASE] Mensagem enviada pelo processo 762 ao sair da região critica.  02/05/2023 22:26:48
+Formato REQUEST - 3|762|0000

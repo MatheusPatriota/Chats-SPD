@@ -1,9 +1,13 @@
 class Message:
-    REQUEST = "REQUEST"
-    GRANT = "GRANT"
-    RELEASE = "RELEASE"
     SEPARATOR = "|"
+    F = 10
+
+    REQUEST = "1"
+    GRANT = "2"
+    RELEASE = "3"
 
     @staticmethod
     def create_message(message_type, process_id):
-        return f"{message_type}{Message.SEPARATOR}{process_id}{Message.SEPARATOR}".ljust(10, "0")
+        message = f"{message_type}{Message.SEPARATOR}{process_id}{Message.SEPARATOR}"
+        padding = "0" * (Message.F - len(message))
+        return message + padding
