@@ -19,10 +19,14 @@ class Server:
     def __init__(self):
         self.mutex = threading.Lock()
         self.queue = []
+        self.fila_processos = []
+        self.processos_atendidos = []
+        self.vezes_atendidos = {}
+        self.processo_em_atendimento = None
+
         self.processes = {}
         self.running = True
         self.process_count = 0
-        self.vezes_atendidos = {}
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.socket.bind(('localhost', 8888))
         self.isGranted = False
@@ -42,7 +46,10 @@ class Server:
 
     # Função que recebe mensagens dos processos
     def receive(self):
-        while self.running:
+        while True:
+            # if(not len(self.fila_processos) > 0):
+            #     print("Acabaram os Processos!")
+            #     break
             try:
                 # Recebe os dados e o endereço do processo
                 data, addr = self.socket.recvfrom(1024)
@@ -51,41 +58,81 @@ class Server:
                 message_type, process_id, _ = data.decode().split(Message.SEPARATOR)
                 process_id = int(process_id)
 
-                # Verifica se o processo já está registrado e adiciona caso não esteja
-                if process_id not in self.processes:
-                    self.add_process(process_id, addr)
-                # Se a mensagem for do tipo REQUEST
+                self.fila_processos.append(process_id)
+
+                print("mensagem recebida: ", message_type, process_id)
                 if message_type == Message.REQUEST:
-                    # Adiciona o processo na fila
-                    self.queue.append(process_id)
-                    # Registra no log que o processo solicitou acesso à região crítica
-                    log_event(
-                        f"[REQUEST] Mensagem enviada pelo processo {process_id} para solicitar acesso região critica.  {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-                    # Se o acesso não foi concedido a nenhum processo
-                    if self.isGranted == False:
-                        # Atualiza o contador de vezes que o processo foi atendido
-                        if process_id in self.vezes_atendidos:
-                            self.vezes_atendidos[process_id] += 1
-                        else:
-                            self.vezes_atendidos[process_id] = 1
 
-                        # Concede o acesso à região crítica para o processo
-                        self.send_message(Message.GRANT, process_id)
-                        # Registra no log que o acesso foi concedido
-                        log_event(
+                    print("Request recebido")
+                    if (self.processo_em_atendimento == None):
+                        print("Processo colocado em atendimento")
+                        self.processo_em_atendimento = self.fila_processos.pop(0)
+                        print("Processo atendimento", self.processo_em_atendimento)
+                        grant_response = (
                             f"[GRANT] Mensagem enviada pelo coordenador dando acesso região critica. Acesso concedido ao processo:{process_id}.  {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-                        time.sleep(1)
-                        # Envia mensagem de RELEASE
-                        message = Message.create_message(
-                            Message.RELEASE, process_id)
-                        log_event(
-                            f"[RELEASE] Mensagem enviada pelo processo {process_id} ao sair da região critica.  {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-                        log_event(f"Formato REQUEST - {message}")
-                        time.sleep(1)
-
-                        self.isGranted = False
+                        print("grant", grant_response)
+                        self.socket.sendto(
+                            Message.GRANT.encode(),addr)
                     else:
-                        print("Aguardando processo sair da região critica...")
+                        wait_response = (
+                            f"Outro Processo está ocupando a zona critica, aguarde....")
+                        self.socket.sendto(
+                            wait_response.encode(), addr)
+                
+                if message_type == Message.RELEASE:
+                    print("Release recebido")
+                    self.processo_em_atendimento = None
+                    print("Processo em atendimento", self.processo_em_atendimento)
+                    if (len(self.fila_processos) > 0):
+                        print("Processo colocado em atendimento")
+                        self.processo_em_atendimento = self.fila_processos.pop(0)
+                        print("Processo atendimento", self.processo_em_atendimento)
+                        grant_response = (
+                            f"[GRANT] Mensagem enviada pelo coordenador dando acesso região critica. Acesso concedido ao processo:{process_id}.  {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
+                        print("grant", grant_response)
+                        self.socket.sendto(
+                            Message.GRANT.encode(),addr)
+                    else:
+                        print("Acabaram os Processos!")
+                        break
+                
+                
+
+                # # Verifica se o processo já está registrado e adiciona caso não esteja
+                # if process_id not in self.processes:
+                #     self.add_process(process_id, addr)
+                # # Se a mensagem for do tipo REQUEST
+                # if message_type == Message.REQUEST:
+                #     # Adiciona o processo na fila
+                #     self.queue.append(process_id)
+                #     # Registra no log que o processo solicitou acesso à região crítica
+                #     log_event(
+                #         f"[REQUEST] Mensagem enviada pelo processo {process_id} para solicitar acesso região critica.  {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
+                #     # Se o acesso não foi concedido a nenhum processo
+                #     if self.isGranted == False:
+                #         # Atualiza o contador de vezes que o processo foi atendido
+                #         if process_id in self.vezes_atendidos:
+                #             self.vezes_atendidos[process_id] += 1
+                #         else:
+                #             self.vezes_atendidos[process_id] = 1
+
+                #         # Concede o acesso à região crítica para o processo
+                #         self.send_message(Message.GRANT, process_id)
+                #         # Registra no log que o acesso foi concedido
+                #         log_event(
+                #             f"[GRANT] Mensagem enviada pelo coordenador dando acesso região critica. Acesso concedido ao processo:{process_id}.  {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
+                #         time.sleep(1)
+                #         # Envia mensagem de RELEASE
+                #         message = Message.create_message(
+                #             Message.RELEASE, process_id)
+                #         log_event(
+                #             f"[RELEASE] Mensagem enviada pelo processo {process_id} ao sair da região critica.  {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
+                #         log_event(f"Formato REQUEST - {message}")
+                #         time.sleep(1)
+
+                #         self.isGranted = False
+                #     else:
+                #         print("Aguardando processo sair da região critica...")
             except:
                 print("NENHUM PROCESSO CONECTADO...")
 
